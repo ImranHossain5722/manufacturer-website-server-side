@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -19,6 +20,7 @@ async function run (){
 try{
  await client.connect()
   const itemsCollection = client.db('lather_database').collection('manufacturerItems')
+  const userCollection = client.db('lather_database').collection('user')
 
 // Api for my maunfacturer Items
 app.get('/manufacturerItems', async(req,res)=>{
@@ -31,6 +33,44 @@ app.get('/manufacturerItems', async(req,res)=>{
 })
 
 
+app.get('/user', async(req,res)=>{
+
+  const query = {}
+  const cursor = userCollection.find(query)
+  const users =await cursor.toArray()
+  res.send(users)
+
+})
+app.put('/user/:email', async (req,res) =>{
+
+  const email =req.params.email;
+  const user = req.body;
+  const filter = {email: email};
+  const options = {upsert: true};
+  const updateDoc ={
+    $set: user, 
+  };
+  const result =await userCollection.updateOne(filter,updateDoc,options);
+  res.send(result)
+})
+///  single user
+app.get('/user/:id', async(req,res)=>{
+
+  const id =req.params.id;
+  const query ={_id:ObjectId(id)}
+  const result= await userCollection.findOne(query)
+  res.send(result)
+})
+
+// Post User add new user api
+
+app.post('/user',async(req,res)=>{
+  const newUser =req.body;
+  console.log('add new user',newUser);
+  const result =await userCollection.insertOne(newUser)
+  res.send(result)
+
+})
 
 }
 finally{
