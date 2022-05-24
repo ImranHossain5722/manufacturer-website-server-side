@@ -36,6 +36,7 @@ try{
  await client.connect()
   const itemsCollection = client.db('lather_database').collection('manufacturerItems')
   const userCollection = client.db('lather_database').collection('user')
+  const blogsCollection = client.db('lather_database').collection("blogs");
 
 // Api for my maunfacturer Items
 app.get('/manufacturerItems', async(req,res)=>{
@@ -47,25 +48,32 @@ app.get('/manufacturerItems', async(req,res)=>{
 
 })
 
+//single items API
+app.get('/manufacturerItems/:id', async(req,res)=>{
+  const id = req.params.id;
+  const query ={_id: ObjectId(id) };
+  const singleItem = await itemsCollection.findOne(query);
+  res.send(singleItem);
 
-app.get('/user', verifyJwt,async(req,res)=>{
+})
+
+
+app.get('/user',  async(req,res)=>{
 
   const users =await userCollection.find().toArray()
   res.send(users)
 
 })
 //user ADMIN  API
-app.put('/user/admin/:email', async (req,res) =>{
+app.put('/user/admin/:email',  async (req,res) =>{
 
   const email =req.params.email;
-
     const filter = {email: email};
     const updateDoc ={
       $set: {role:'admin'}, 
     }
-   
     const result =await userCollection.updateOne(filter,updateDoc);
-    res.send(result )
+    res.send(result ) 
 })
 
 app.put('/user/:email', async (req,res) =>{
@@ -78,6 +86,7 @@ app.put('/user/:email', async (req,res) =>{
     $set: user, 
   };
   const result =await userCollection.updateOne(filter,updateDoc,options);
+
   const token =jwt.sign({email:email},process.env.ACCESS_TOKEN_SECRET,{expiresIn:'2h'})
   res.send({result, token} )
 })
