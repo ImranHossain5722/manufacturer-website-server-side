@@ -38,6 +38,7 @@ try{
   const itemsCollection = client.db('lather_database').collection('manufacturerItems')
   const userCollection = client.db('lather_database').collection('user')
   const blogsCollection = client.db('lather_database').collection("blogs");
+  const reviewCollection = client.db('lather_database').collection("reviews");
 
 // Api for blogs data
 app.get("/blogs", async (req, res) => {
@@ -54,6 +55,9 @@ app.get('/blogs/:id',async(req,res)=> {
   const blog=await blogsCollection.findOne(query);
   res.send(blog)
 })
+
+  
+
 
 // Api for my maunfacturer Items
 app.get('/manufacturerItems', async(req,res)=>{
@@ -73,7 +77,24 @@ app.get('/manufacturerItems/:id', async(req,res)=>{
   res.send(singleItem);
 
 })
+// APi for upload data on database 
 
+app.post("/manufacturerItems", async (req, res)=> {
+  const newItem = req.body;
+  const result = await itemsCollection.insertOne(newItem);
+  res.send(result);
+
+});
+
+// Api for my maunfacturer Items
+app.get('/reviews', async(req,res)=>{
+
+  const query ={}
+  const cursor = reviewCollection.find(query)
+  const items = await cursor.toArray()
+  res.send(items)
+
+})
 
 app.get('/user',  async(req,res)=>{
 
