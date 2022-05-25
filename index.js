@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const jwt = require('jsonwebtoken')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const res = require('express/lib/response');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -37,6 +38,22 @@ try{
   const itemsCollection = client.db('lather_database').collection('manufacturerItems')
   const userCollection = client.db('lather_database').collection('user')
   const blogsCollection = client.db('lather_database').collection("blogs");
+
+// Api for blogs data
+app.get("/blogs", async (req, res) => {
+  const query = {};
+  const cursor = blogsCollection.find(query);
+  const blogs = await cursor.toArray();
+  res.send(blogs);
+});
+// Blog Details APi
+app.get('/blogs/:id',async(req,res)=> {
+
+  const id =req.params.id;
+  const query= {_id: ObjectId(id)};
+  const blog=await blogsCollection.findOne(query);
+  res.send(blog)
+})
 
 // Api for my maunfacturer Items
 app.get('/manufacturerItems', async(req,res)=>{
