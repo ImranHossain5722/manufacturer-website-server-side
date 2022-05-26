@@ -146,6 +146,24 @@ app.put('/user/:email', async (req,res) =>{
   res.send({result, token} )
 })
 
+app.get('/orders', async(req,res)=>{
+
+  const query ={}
+  const cursor = ordersCollection.find(query)
+  const allOrder = await cursor.toArray()
+  res.send(allOrder)
+
+})
+
+app.get('/orders', async(req,res)=>{
+  const email =req.query.email
+  const query ={}
+  const cursor = ordersCollection.find(query)
+  const allOrder = await cursor.toArray()
+  res.send(allOrder)
+
+})
+
 // Api post for orders
 app.post("/orders", async (req, res)=> {
   const newOrder = req.body;
@@ -154,25 +172,8 @@ app.post("/orders", async (req, res)=> {
 
 });
 
-// ///  single user
-// app.get('/user/:id', async(req,res)=>{
-
-//   const id =req.params.id;
-//   const query ={_id:ObjectId(id)}
-//   const result= await userCollection.findOne(query)
-//   res.send(result)
-// })
-
-// Post User add new user api
-// app.post('/user',async(req,res)=>{
-//   const newUser =req.body;
-//   console.log('add new user',newUser);
-//   const result =await userCollection.insertOne(newUser)
-//   res.send(result)
-
-// })
-
 }
+
 finally{
 
 }
