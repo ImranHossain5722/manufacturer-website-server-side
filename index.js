@@ -39,6 +39,7 @@ try{
   const userCollection = client.db('lather_database').collection('user')
   const blogsCollection = client.db('lather_database').collection("blogs");
   const reviewCollection = client.db('lather_database').collection("reviews");
+  const ordersCollection = client.db('lather_database').collection("orders");
 
 // Api for blogs data
 app.get("/blogs", async (req, res) => {
@@ -95,6 +96,13 @@ app.get('/reviews', async(req,res)=>{
   res.send(items)
 
 })
+// Api for my add review
+app.post("/reviews", async (req, res)=> {
+  const newItem = req.body;
+  const result = await reviewCollection.insertOne(newItem);
+  res.send(result);
+
+});
 
 app.get('/user',  async(req,res)=>{
 
@@ -137,6 +145,14 @@ app.put('/user/:email', async (req,res) =>{
   const token =jwt.sign({email:email},process.env.ACCESS_TOKEN_SECRET,{expiresIn:'2h'})
   res.send({result, token} )
 })
+
+// Api post for orders
+app.post("/orders", async (req, res)=> {
+  const newOrder = req.body;
+  const result = await ordersCollection.insertOne(newOrder);
+  res.send(result);
+
+});
 
 // ///  single user
 // app.get('/user/:id', async(req,res)=>{
