@@ -159,8 +159,8 @@ app.get('/orders', async(req,res)=>{
   const email =req.query.email
   const query ={}
   const cursor = ordersCollection.find(query)
-  const allOrder = await cursor.toArray()
-  res.send(allOrder)
+  const SingleOrder = await cursor.toArray()
+  res.send(SingleOrder)
 
 })
 
