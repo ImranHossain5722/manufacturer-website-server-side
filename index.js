@@ -87,6 +87,15 @@ app.post("/manufacturerItems", async (req, res)=> {
 
 });
 
+//Delete
+
+    app.delete("/manufacturerItems/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await itemsCollection.deleteOne(query);
+      res.send(result);
+    });
+
 // Api for my maunfacturer Items
 app.get('/reviews', async(req,res)=>{
 
