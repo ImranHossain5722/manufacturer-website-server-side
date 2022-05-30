@@ -207,5 +207,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`leather factory app listening on port ${port}`)
+  console.log(`leather factory server app listening on port ${port}`)
 })
