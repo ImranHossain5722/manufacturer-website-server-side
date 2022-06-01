@@ -112,13 +112,21 @@ app.post("/reviews", async (req, res)=> {
   res.send(result);
 
 });
-
+// all user api
 app.get('/user',  async(req,res)=>{
 
   const users =await userCollection.find().toArray()
   res.send(users)
 
 })
+
+// single User api
+app.get('/user/:email', async(req,res)=>{
+const email =req.params.email;
+const user =await userCollection.findOne({email:email})
+res.send(user)
+
+});
 
 // admin
 app.get('/admin/:email',async(req,res)=>{
