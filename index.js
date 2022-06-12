@@ -171,6 +171,7 @@ app.get('/orders', async(req,res)=>{
   res.send(allOrder)
 
 })
+ 
 
 app.get('/orders', async(req,res)=>{
   const email =req.query.email
@@ -180,7 +181,15 @@ app.get('/orders', async(req,res)=>{
   res.send(SingleOrder)
 
 })
+//for pay api
+app.get('/orders/:id', async(req,res)=>{
 
+  const id = req.params.id;
+  const query = { _id: ObjectId(id) };
+  const singleOrderPayment = await ordersCollection.findOne(query);
+  res.send(singleOrderPayment);
+
+})
 // Api post for orders
 app.post("/orders", async (req, res)=> {
   const newOrder = req.body;
